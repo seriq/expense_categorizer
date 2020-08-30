@@ -1,12 +1,16 @@
-extern crate csv;
-
-//use csv::ReaderBuilder;
-//use std::error::Error;
 use std::fmt;
+use std::process;
 
-fn main() {}
+mod parser;
 
-#[derive(Default, Debug)]
+fn main() {
+    if let Err(err) = parser::example() {
+        println!("error running example: {}", err);
+        process::exit(1);
+    }
+}
+
+#[derive(Default, Debug, PartialEq, Eq)]
 struct Booking {
     beschreibung: String,
     betrag: String,       //TODO: EUR
@@ -25,7 +29,7 @@ impl fmt::Display for Booking {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 enum AdditionalDetails {
     DkbAccount(DkbAccountDetails),
     DkbVisa(DkbVisaDetails),
@@ -38,7 +42,7 @@ impl Default for AdditionalDetails {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, PartialEq, Eq)]
 struct DkbAccountDetails {
     buchungstext: String,
     auftraggeber_beguenstigter: String,
@@ -49,13 +53,13 @@ struct DkbAccountDetails {
     kundenreferenz: String,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, PartialEq, Eq)]
 struct DkbVisaDetails {
     umsatz_abgerechnet_und_nicht_im_saldo_enthalten: bool,
     urspruenglicher_betrag: String, //TODO: EUR
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, PartialEq, Eq)]
 struct AmexDetails {
     referenz: String,
 }
@@ -64,7 +68,7 @@ struct AmexDetails {
 mod tests {
     use super::*;
     #[test]
-    fn test_display() {
+    fn test_eq() {
         let buchung_dkb = Booking {
             beschreibung: String::from("This is an interesting booking."),
             betrag: String::from("13,37 EUR"),
@@ -86,8 +90,11 @@ mod tests {
             wertstellung: String::from("21.04.2020"),
             additional_details: AdditionalDetails::Amex(AmexDetails::default()),
         };
+        assert_ne!(buchung_dkb, buchung_visa);
+        assert_ne!(buchung_visa, buchung_amex);
+        assert_ne!(buchung_amex, buchung_dkb);
+        assert_eq!(buchung_amex, buchung_amex);
+
         print!("{:#?}", buchung_dkb);
-        print!("{:#?}", buchung_visa);
-        print!("{:#?}", buchung_amex);
     }
 }
