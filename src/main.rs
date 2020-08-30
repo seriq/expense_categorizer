@@ -1,87 +1,93 @@
 extern crate csv;
 
-use csv::ReaderBuilder;
-use std::error::Error;
-use std::fmt::Display;
+//use csv::ReaderBuilder;
+//use std::error::Error;
+use std::fmt;
 
 fn main() {}
 
-#[derive(Debug)]
-enum AccountEntry {
-    Account(DkbAccountEntry),
-    Visa(DkbVisaEntry),
-    Amex(AmexEntry),
+#[derive(Default, Debug)]
+struct Booking {
+    beschreibung: String,
+    betrag: String,       //TODO: EUR
+    belegdatum: String,   //TODO: date
+    wertstellung: String, //TODO: date
+    additional_details: AdditionalDetails,
 }
 
-impl Display for AccountEntry {
-    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+impl fmt::Display for Booking {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
         write!(
             f,
-            "Beschreibung: {}, Betrag: {}",
-            self.beschreibung, self.betrag
-        );
+            "Beschreibung: {}, Betrag: {}, Belegdatum: {}, Wertstellung: {}",
+            self.beschreibung, self.betrag, self.belegdatum, self.wertstellung
+        )
+    }
+}
+
+#[derive(Debug)]
+enum AdditionalDetails {
+    DkbAccount(DkbAccountDetails),
+    DkbVisa(DkbVisaDetails),
+    Amex(AmexDetails),
+}
+
+impl Default for AdditionalDetails {
+    fn default() -> Self {
+        AdditionalDetails::DkbAccount(DkbAccountDetails::default())
     }
 }
 
 #[derive(Default, Debug)]
-struct DkbAccountEntry {
-    belegdatum: String,   //TODO: date
-    wertstellung: String, //TODO: date
+struct DkbAccountDetails {
     buchungstext: String,
     auftraggeber_beguenstigter: String,
-    beschreibung: String, //verwendungszweck
-    kontonummer: String,  //TODO: IBAN
-    blz: String,          //TODO: BIC
-    betrag: String,       //TODO: EUR
+    kontonummer: String, //TODO: IBAN
+    blz: String,         //TODO: BIC
     glaeubiger_id: String,
     mandatsreferenz: String,
     kundenreferenz: String,
 }
 
 #[derive(Default, Debug)]
-struct DkbVisaEntry {
+struct DkbVisaDetails {
     umsatz_abgerechnet_und_nicht_im_saldo_enthalten: bool,
-    wertstellung: String, //TODO: date
-    belegdatum: String,   //TODO: date
-    beschreibung: String,
-    betrag: String,                 //TODO: EUR
     urspruenglicher_betrag: String, //TODO: EUR
 }
 
 #[derive(Default, Debug)]
-struct AmexEntry {
-    belegdatum: String, //TODO: date
+struct AmexDetails {
     referenz: String,
-    betrag: String, //TODO: EUR
-    beschreibung: String,
-    wertstellung: String, //TODO: date
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
-    fn test_to_string() {
-        let buchung = AccountEntry::Account(DkbAccountEntry {
-            auftraggeber_beguenstigter: String::from("1337"),
-            verwendungszweck: String::from("This is an interesting booking."),
+    fn test_display() {
+        let buchung_dkb = Booking {
+            beschreibung: String::from("This is an interesting booking."),
+            betrag: String::from("13,37 EUR"),
+            belegdatum: String::from("20.04.2020"),
+            wertstellung: String::from("21.04.2020"),
             ..Default::default()
-        });
-        assert_eq!(
-            format!("{:#?}", buchung),
-            String::from(
-                r#"Account(DkbAccountEntry { buchungstag: "",
-                                           wertstellung: "",
-                                           buchungstext: "",
-                                           auftraggeber_beguenstigter: "1337",
-                                           verwendungszweck: "This is an interesting booking.",
-                                           kontonummer: "",
-                                           blz: "",
-                                           betrag: "",
-                                           glaeubiger_id: "",
-                                           mandatsreferenz: "",
-                                           kundenreferenz: "" })"#
-            )
-        )
+        };
+        let buchung_visa = Booking {
+            beschreibung: String::from("This is an interesting booking."),
+            betrag: String::from("13,37 EUR"),
+            belegdatum: String::from("20.04.2020"),
+            wertstellung: String::from("21.04.2020"),
+            additional_details: AdditionalDetails::DkbVisa(DkbVisaDetails::default()),
+        };
+        let buchung_amex = Booking {
+            beschreibung: String::from("This is an interesting booking."),
+            betrag: String::from("13,37 EUR"),
+            belegdatum: String::from("20.04.2020"),
+            wertstellung: String::from("21.04.2020"),
+            additional_details: AdditionalDetails::Amex(AmexDetails::default()),
+        };
+        print!("{:#?}", buchung_dkb);
+        print!("{:#?}", buchung_visa);
+        print!("{:#?}", buchung_amex);
     }
 }
