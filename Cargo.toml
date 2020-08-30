@@ -1,0 +1,10 @@
+[package]
+name = "expense-categorizer"
+version = "0.1.0"
+authors = ["Eric Schlarmann <eric.schlarmann@tngtech.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+csv = "1.1.3"
