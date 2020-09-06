@@ -4,7 +4,7 @@ use std::process;
 mod parser;
 
 fn main() {
-    if let Err(err) = parser::example() {
+    if let Err(err) = parser::parse_file() {
         println!("error running example: {}", err);
         process::exit(1);
     }
@@ -30,6 +30,7 @@ impl fmt::Display for Booking {
 }
 
 #[derive(Debug, PartialEq, Eq)]
+#[allow(dead_code)]
 enum AdditionalDetails {
     DkbAccount(DkbAccountDetails),
     DkbVisa(DkbVisaDetails),
