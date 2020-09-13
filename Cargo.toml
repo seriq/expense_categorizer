@@ -1,5 +1,5 @@
 [package]
-name = "expense-categorizer"
+name = "expense_categorizer"
 version = "0.1.0"
 authors = ["Eric Schlarmann <eric.schlarmann@tngtech.com>"]
 edition = "2018"
@@ -10,3 +10,6 @@ edition = "2018"
 csv = "1.1.3"
 encoding_rs = "0.8.24"
 encoding_rs_io = "0.1.7"
+chrono = "0.4.15"
+currency = "0.4.0"
+num-format = "0.4.0"
