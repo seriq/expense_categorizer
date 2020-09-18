@@ -60,27 +60,28 @@ pub struct AmexDetails {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::parser::*;
     #[test]
     fn test_eq() {
         let buchung_dkb = Booking {
             beschreibung: String::from("This is an interesting booking."),
-            betrag: Currency::from_str("13,37 EUR").expect("parse error."),
-            belegdatum: "20.04.2020".parse::<NaiveDate>().expect("horrible stuff"),
-            wertstellung: "21.04.2020".parse::<NaiveDate>().expect("horrible stuff"),
+            betrag: parse_currency("13,37"),
+            belegdatum: parse_naive_date("20.04.2020"),
+            wertstellung: parse_naive_date("21.04.2020"),
             additional_details: Default::default(),
         };
         let buchung_visa = Booking {
             beschreibung: String::from("This is an interesting booking."),
-            betrag: Currency::from_str("13,37 EUR").expect("parse error."),
-            belegdatum: "20.04.2020".parse::<NaiveDate>().expect("parse error"),
-            wertstellung: "21.04.2020".parse::<NaiveDate>().expect("parse error"),
+            betrag: parse_currency("13,37"),
+            belegdatum: parse_naive_date("20.04.2020"),
+            wertstellung: parse_naive_date("21.04.2020"),
             additional_details: AdditionalDetails::DkbVisa(DkbVisaDetails::default()),
         };
         let buchung_amex = Booking {
             beschreibung: String::from("This is an interesting booking."),
-            betrag: Currency::from_str("13,37 EUR").expect("parse error."),
-            belegdatum: "20.04.2020".parse::<NaiveDate>().expect("horrible stuff"),
-            wertstellung: "21.04.2020".parse::<NaiveDate>().expect("horrible stuff"),
+            betrag: parse_currency("13,37"),
+            belegdatum: parse_naive_date("20.04.2020"),
+            wertstellung: parse_naive_date("21.04.2020"),
             additional_details: AdditionalDetails::Amex(AmexDetails::default()),
         };
         assert_ne!(buchung_dkb, buchung_visa);

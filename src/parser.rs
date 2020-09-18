@@ -24,9 +24,17 @@ pub fn parse_file() -> csv::Result<()> {
 fn parse_dkb_account_entry(record: StringRecord) -> Booking {
     Booking {
         beschreibung: String::from(&record[2]),
-        betrag: Currency::from_str(&["€", &record[7]].join("")).expect("parse error"),
-        belegdatum: NaiveDate::parse_from_str(&record[0], "%d.%m.%Y").expect("parse error"),
-        wertstellung: NaiveDate::parse_from_str(&record[1], "%d.%m.%Y").expect("parse error"),
+        betrag: parse_currency(&record[7]),
+        belegdatum: parse_naive_date(&record[0]),
+        wertstellung: parse_naive_date(&record[1]),
         additional_details: Default::default(),
     }
+}
+
+pub fn parse_naive_date(date: &str) -> NaiveDate {
+    NaiveDate::parse_from_str(&date, "%d.%m.%Y").expect("parse error")
+}
+
+pub fn parse_currency(currency: &str) -> Currency {
+    Currency::from_str(&["€", currency].join("")).expect("parse error")
 }
