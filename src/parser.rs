@@ -7,29 +7,33 @@ use encoding_rs_io::DecodeReaderBytesBuilder;
 use std::fs::File;
 
 pub fn parse_file() -> csv::Result<Vec<Booking>> {
-    let file = File::open("exampledata/account_noheader.csv")?;
+    let file = File::open("exampledata/Buchungsliste.csv")?;
     let transcoded = DecodeReaderBytesBuilder::new()
         .encoding(Some(WINDOWS_1252))
         .build(file);
     let mut rdr = ReaderBuilder::new().delimiter(b';').from_reader(transcoded);
     let mut parsed_bookings = Vec::new();
     for result in rdr.records() {
-        let entry = parse_dkb_account_entry(result?);
-        if entry.wertstellung >= NaiveDate::from_ymd(2020, 08, 01) {
-            //println!("{:#?}", &entry.betrag / 100);
+        let entry = parse_entry(result?);
+        if entry.buchungsdatum >= NaiveDate::from_ymd(2020, 08, 01) {
             parsed_bookings.push(entry);
         }
     }
     Ok(parsed_bookings)
 }
 
-fn parse_dkb_account_entry(record: StringRecord) -> Booking {
+fn parse_entry(record: StringRecord) -> Booking {
     Booking {
-        beschreibung: String::from(&record[4]),
-        betrag: parse_currency(&record[7]),
-        belegdatum: parse_naive_date(&record[0]),
-        wertstellung: parse_naive_date(&record[1]),
-        additional_details: Default::default(),
+        buchungsdatum: parse_naive_date(&record[0]),
+        empfaenger: String::from(&record[1]),
+        verwendungszweck: String::from(&record[2]),
+        buchungstext: String::from(&record[3]),
+        betrag: parse_currency(&record[4]),
+        iban: String::from(&record[5]),
+        bic: String::from(&record[6]),
+        kategorie: String::from(&record[7]),
+        notiz: String::from(&record[9]),
+        schlagworte: String::from(&record[9]),
     }
 }
 

@@ -10,7 +10,7 @@ pub fn categorize_booking(booking: Booking) -> CategorizedBooking {
 }
 
 pub fn detect_warmmiete(booking: &Booking) -> bool {
-    booking.beschreibung.contains("Miete")
+    booking.verwendungszweck.contains("Miete") && booking.buchungstext == "DAUERAUFTRAG"
 }
 
 #[derive(Debug, PartialEq, Eq)]
