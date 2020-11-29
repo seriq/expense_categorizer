@@ -1,4 +1,4 @@
-use crate::model::Booking;
+use crate::model::*;
 
 pub fn categorize_booking(booking: Booking) -> CategorizedBooking {
     for rule in create_rules() {
@@ -9,14 +9,8 @@ pub fn categorize_booking(booking: Booking) -> CategorizedBooking {
     CategorizedBooking::Uncategorized(booking)
 }
 
-pub fn detect_warmmiete(booking: &Booking) -> bool {
+fn detect_warmmiete(booking: &Booking) -> bool {
     booking.verwendungszweck.contains("Miete") && booking.buchungstext == "DAUERAUFTRAG"
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum CategorizedBooking {
-    Warmmiete(Booking),
-    Uncategorized(Booking),
 }
 
 fn create_rules() -> Vec<Rule> {
@@ -26,19 +20,4 @@ fn create_rules() -> Vec<Rule> {
         apply: CategorizedBooking::Warmmiete,
     });
     rules
-}
-
-struct Rule {
-    check: fn(&Booking) -> bool,
-    apply: fn(Booking) -> CategorizedBooking,
-}
-
-impl Rule {
-    fn check(&self, booking: &Booking) -> bool {
-        (self.check)(booking)
-    }
-
-    fn apply(&self, booking: Booking) -> CategorizedBooking {
-        (self.apply)(booking)
-    }
 }
