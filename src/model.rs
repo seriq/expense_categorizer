@@ -1,19 +1,28 @@
-use chrono::NaiveDate;
-use currency::Currency;
 use serde::Deserialize;
 
-#[derive(Debug, PartialEq, Eq)]
+//TODO: Booking und bookingrule zusammenfassen
+#[derive(Debug, PartialEq, Eq, Default, Deserialize)]
 pub struct Booking {
-    pub buchungsdatum: NaiveDate,
-    pub empfaenger: String,
-    pub verwendungszweck: String,
-    pub buchungstext: String,
-    pub betrag: Currency,
-    pub iban: String,
-    pub bic: String,
-    pub kategorie: String,
-    pub notiz: String,
-    pub schlagworte: String,
+    #[serde(rename = "Buchungsdatum")]
+    pub buchungsdatum: Option<String>,
+    #[serde(rename = "Empfaenger")]
+    pub empfaenger: Option<String>,
+    #[serde(rename = "Verwendungszweck")]
+    pub verwendungszweck: Option<String>,
+    #[serde(rename = "Buchungstext")]
+    pub buchungstext: Option<String>,
+    #[serde(rename = "Betrag")]
+    pub betrag: Option<String>,
+    #[serde(rename = "IBAN")]
+    pub iban: Option<String>,
+    #[serde(rename = "BIC")]
+    pub bic: Option<String>,
+    #[serde(rename = "Kategorie")]
+    pub kategorie: Option<String>,
+    #[serde(rename = "Notiz")]
+    pub notiz: Option<String>,
+    #[serde(rename = "Schlagworte")]
+    pub schlagworte: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -33,6 +42,8 @@ pub struct BookingRule {
 #[derive(Debug, PartialEq, Eq)]
 pub enum CategorizedBooking {
     Warmmiete(Booking),
+    Strom(Booking),
+    Internet(Booking),
     Uncategorized(Booking),
 }
 
