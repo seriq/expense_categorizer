@@ -11,21 +11,13 @@ const RULES_FILENAME: &str = "exampledata/Rules.yaml";
 pub fn parse_bookings_from_file() -> csv::Result<Vec<Booking>> {
     let file = File::open(BOOKINGS_FILENAME).expect("Error while opening file.");
     let mut rdr = ReaderBuilder::new().delimiter(b';').from_reader(file);
-    let mut parsed_bookings = Vec::new();
-    for result in rdr.deserialize() {
-        let entry: Booking = result?;
-        println!("{:?}", entry);
-        parsed_bookings.push(entry);
-    }
-    Ok(parsed_bookings)
+    rdr.deserialize().collect()
 }
 
 pub fn parse_rules_from_file() -> Result<HashMap<String, BookingRule>, serde_yaml::Error> {
     let file = File::open(RULES_FILENAME).expect("Error while opening file.");
     let buf_reader = BufReader::new(file);
-    let rules = serde_yaml::from_reader::<_, HashMap<String, BookingRule>>(buf_reader)
-        .expect("Error while parsing rules.");
-    Ok(rules)
+    serde_yaml::from_reader::<_, HashMap<String, BookingRule>>(buf_reader)
 }
 
 //fn parse_entry(record: StringRecord) -> Booking {
