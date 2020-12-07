@@ -8,11 +8,10 @@ mod model;
 mod parser;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
-    let parsed_rules = parse_rules_from_file().expect("parse error");
-    let rules = create_rules(parsed_rules);
-    let parsed_bookings = parse_bookings_from_file().expect("parse error");
+    let rules = parse_rules_from_file().expect("Error parsing rules.");
+    let bookings = parse_bookings_from_file().expect("Error parsing bookings.");
     let mut categorized_bookings: Vec<CategorizedBooking> = Vec::new();
-    for booking in parsed_bookings {
+    for booking in bookings {
         categorized_bookings.push(categorize_booking(booking, &rules));
     }
     for booking in categorized_bookings {
@@ -23,7 +22,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
-//pub fn run() -> Result<(), Box<dyn Error>> {
 //    let data = r#"
 //        Warmmiete:
 //            empfaenger:
@@ -44,5 +42,3 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 //            iban:
 //                - DE133713374242
 //        "#;
-//    Ok(())
-//}

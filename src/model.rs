@@ -1,6 +1,5 @@
 use serde::Deserialize;
 
-//TODO: Booking und bookingrule zusammenfassen
 #[derive(Debug, PartialEq, Eq, Default, Deserialize)]
 pub struct Booking {
     #[serde(rename = "Buchungsdatum")]
@@ -39,6 +38,12 @@ pub struct BookingRule {
     pub schlagworte: Option<Vec<String>>,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct CategoryWithRule {
+    pub category: String,
+    pub booking_rule: BookingRule,
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum CategorizedBooking {
     Warmmiete(Booking),
@@ -47,17 +52,22 @@ pub enum CategorizedBooking {
     Uncategorized(Booking),
 }
 
-pub struct Rule {
-    pub check: fn(&Booking) -> bool,
-    pub apply: fn(Booking) -> CategorizedBooking,
-}
-
-impl Rule {
-    pub fn check(&self, booking: &Booking) -> bool {
-        (self.check)(booking)
-    }
-
+impl CategoryWithRule {
     pub fn apply(&self, booking: Booking) -> CategorizedBooking {
-        (self.apply)(booking)
+        match self.category.as_str() {
+            "Warmmiete" => CategorizedBooking::Warmmiete(booking),
+            "Strom" => CategorizedBooking::Strom(booking),
+            "Internet" => CategorizedBooking::Internet(booking),
+            _ => CategorizedBooking::Uncategorized(booking),
+        }
+    }
+    pub fn check(&self, booking: &Booking) -> bool {
+        match &self.booking_rule.buchungstext {
+            Some(needles) => match &booking.buchungstext {
+                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
+                None => false,
+            },
+            None => false,
+        }
     }
 }
