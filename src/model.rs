@@ -38,6 +38,30 @@ pub struct BookingRule {
     pub schlagworte: Option<Vec<String>>,
 }
 
+impl BookingRule {
+    fn check(&self, booking: &Booking) -> bool {
+        (match &self.buchungstext {
+            Some(needles) => match &booking.buchungstext {
+                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
+                None => false,
+            },
+            None => true,
+        }) && (match &self.empfaenger {
+            Some(needles) => match &booking.empfaenger {
+                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
+                None => false,
+            },
+            None => true,
+        }) && (match &self.verwendungszweck {
+            Some(needles) => match &booking.verwendungszweck {
+                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
+                None => false,
+            },
+            None => true,
+        })
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct CategoryWithRule {
     pub category: String,
@@ -62,12 +86,6 @@ impl CategoryWithRule {
         }
     }
     pub fn check(&self, booking: &Booking) -> bool {
-        match &self.booking_rule.buchungstext {
-            Some(needles) => match &booking.buchungstext {
-                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
-                None => false,
-            },
-            None => false,
-        }
+        self.booking_rule.check(booking)
     }
 }
