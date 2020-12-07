@@ -8,7 +8,7 @@ mod model;
 mod parser;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
-    let rules = parse_rules_from_file().expect("Error parsing rules.");
+    let rules = parse_rules_from_file()?;
     let bookings = parse_bookings_from_file().expect("Error parsing bookings.");
     let mut categorized_bookings: Vec<CategorizedBooking> = Vec::new();
     for booking in bookings {
@@ -16,9 +16,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     }
     for booking in categorized_bookings {
         match booking.category.as_str() {
-            "Warmmiete" => println!("Warmmiete: {:?}", booking),
-            "Internet" => println!("Internet: {:?}", booking),
-            "Strom" => println!("Strom: {:?}", booking),
+            "Uncategorized" => println!("Keine Kategorie gefunden: {:?}", booking),
             _ => (),
         }
     }
