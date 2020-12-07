@@ -15,8 +15,10 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         categorized_bookings.push(categorize_booking(booking, &rules));
     }
     for booking in categorized_bookings {
-        match booking {
-            CategorizedBooking::Warmmiete(booking) => println!("{:?}", booking),
+        match booking.category.as_str() {
+            "Warmmiete" => println!("Warmmiete: {:?}", booking),
+            "Internet" => println!("Internet: {:?}", booking),
+            "Strom" => println!("Strom: {:?}", booking),
             _ => (),
         }
     }

@@ -69,20 +69,16 @@ pub struct CategoryWithRule {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum CategorizedBooking {
-    Warmmiete(Booking),
-    Strom(Booking),
-    Internet(Booking),
-    Uncategorized(Booking),
+pub struct CategorizedBooking {
+    pub category: String,
+    pub booking: Booking,
 }
 
 impl CategoryWithRule {
     pub fn apply(&self, booking: Booking) -> CategorizedBooking {
-        match self.category.as_str() {
-            "Warmmiete" => CategorizedBooking::Warmmiete(booking),
-            "Strom" => CategorizedBooking::Strom(booking),
-            "Internet" => CategorizedBooking::Internet(booking),
-            _ => CategorizedBooking::Uncategorized(booking),
+        CategorizedBooking {
+            category: self.category.clone(),
+            booking: booking,
         }
     }
     pub fn check(&self, booking: &Booking) -> bool {
