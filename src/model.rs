@@ -40,25 +40,19 @@ pub struct BookingRule {
 
 impl BookingRule {
     fn check(&self, booking: &Booking) -> bool {
-        (match &self.buchungstext {
-            Some(needles) => match &booking.buchungstext {
-                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
+        BookingRule::any_present(&self.buchungstext, &booking.buchungstext)
+            && BookingRule::any_present(&self.empfaenger, &booking.empfaenger)
+            && BookingRule::any_present(&self.verwendungszweck, &booking.verwendungszweck)
+    }
+
+    fn any_present(needles: &Option<Vec<String>>, haystack: &Option<String>) -> bool {
+        match needles {
+            Some(needles) => match haystack {
+                Some(haystack) => needles.iter().any(|a| haystack.contains(a)),
                 None => false,
             },
             None => true,
-        }) && (match &self.empfaenger {
-            Some(needles) => match &booking.empfaenger {
-                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
-                None => false,
-            },
-            None => true,
-        }) && (match &self.verwendungszweck {
-            Some(needles) => match &booking.verwendungszweck {
-                Some(haystack) => needles.iter().all(|a| haystack.contains(a)),
-                None => false,
-            },
-            None => true,
-        })
+        }
     }
 }
 
