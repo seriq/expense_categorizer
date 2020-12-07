@@ -5,8 +5,8 @@ use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
 
-const BOOKINGS_FILENAME: &str = "exampledata/Buchungsliste.csv";
-const RULES_FILENAME: &str = "exampledata/Rules.yaml";
+const BOOKINGS_FILENAME: &str = "data/Buchungsliste.csv";
+const RULES_FILENAME: &str = "data/Rules.yaml";
 
 pub fn parse_bookings_from_file() -> csv::Result<Vec<Booking>> {
     let file = File::open(BOOKINGS_FILENAME)?;

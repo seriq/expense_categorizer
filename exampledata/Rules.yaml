@@ -1,0 +1,18 @@
+Warmmiete:
+    empfaenger:
+        - Horst Schlaemmer
+    betrag:
+        - 1337
+    buchungstext:
+        - DAUERAUFTRAG
+Strom:
+    empfaenger:
+        - Hans Georg GmbH
+    verwendungszweck:
+        - Vertr. 421337
+Internet:
+    empfaenger:
+        - Deutsche Schmelekom
+        - Kd.Nr. 13371337
+    iban:
+        - DE133713374242

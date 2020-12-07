@@ -22,23 +22,3 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
-//    let data = r#"
-//        Warmmiete:
-//            empfaenger:
-//                - Horst Schlaemmer
-//            verwendungszweck:
-//                - 1337
-//            buchungstext:
-//                - DAUERAUFTRAG
-//        Strom:
-//            empfaenger:
-//                - Hans Georg GmbH
-//            verwendungszweck:
-//                - Vertr. 421337
-//        Internet:
-//            empfaenger:
-//                - Deutsche Schmelekom
-//                - Kd.Nr. 13371337
-//            iban:
-//                - DE133713374242
-//        "#;
