@@ -7,10 +7,13 @@ use std::io::BufReader;
 const BOOKINGS_FILENAME: &str = "data/Buchungsliste.csv";
 const RULES_FILENAME: &str = "data/Rules.yaml";
 
-pub fn parse_bookings_from_file() -> csv::Result<Vec<Booking>> {
-    let file = File::open(BOOKINGS_FILENAME)?;
+pub fn parse_bookings_from_file() -> Vec<Booking> {
+    let file = File::open(BOOKINGS_FILENAME)
+        .expect(&format!("Error while opening file {}", BOOKINGS_FILENAME));
     let mut rdr = ReaderBuilder::new().delimiter(b';').from_reader(file);
-    rdr.deserialize().collect()
+    rdr.deserialize()
+        .collect::<csv::Result<Vec<Booking>>>()
+        .expect("Eror while parsing bookings from file.")
 }
 
 pub fn parse_rules_from_file() -> Vec<CategoryWithRule> {
@@ -25,6 +28,7 @@ pub fn parse_rules_from_file() -> Vec<CategoryWithRule> {
 }
 
 fn parse_booking_rules_from_file() -> HashMap<String, BookingRule> {
-    let file = File::open(RULES_FILENAME).expect("Error while opening file.");
+    let file =
+        File::open(RULES_FILENAME).expect(&format!("Error while opening file {}", RULES_FILENAME));
     serde_yaml::from_reader(BufReader::new(file)).expect("Error while parsing rules from file.")
 }

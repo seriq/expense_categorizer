@@ -9,11 +9,11 @@ mod parser;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     let rules = parse_rules_from_file();
-    let bookings = parse_bookings_from_file()?;
-    let mut categorized_bookings: Vec<CategorizedBooking> = Vec::new();
-    for booking in bookings {
-        categorized_bookings.push(categorize_booking(booking, &rules));
-    }
+    let bookings = parse_bookings_from_file();
+    let categorized_bookings = bookings
+        .into_iter()
+        .map(|booking| categorize_booking(booking, &rules))
+        .collect::<Vec<CategorizedBooking>>();
     for booking in categorized_bookings {
         match booking.category.as_str() {
             "Uncategorized" => println!("Keine Kategorie gefunden: {:?}", booking),
