@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Eq, Default, Deserialize)]
+#[derive(Debug, PartialEq, Default, Deserialize)]
 pub struct Booking {
     #[serde(rename = "Buchungsdatum")]
     pub buchungsdatum: Option<String>,
@@ -62,7 +62,7 @@ pub struct CategoryWithRule {
     pub booking_rule: BookingRule,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub struct CategorizedBooking {
     pub category: String,
     pub booking: Booking,
@@ -72,10 +72,15 @@ impl CategoryWithRule {
     pub fn apply(&self, booking: Booking) -> CategorizedBooking {
         CategorizedBooking {
             category: self.category.clone(),
-            booking: booking,
+            booking,
         }
     }
     pub fn check(&self, booking: &Booking) -> bool {
         self.booking_rule.check(booking)
     }
+}
+#[derive(Debug, Serialize)]
+pub struct CategoryWithValue {
+    pub category: String,
+    pub value: f32,
 }

@@ -9,7 +9,7 @@ pub fn categorize_booking(booking: Booking, rules: &Vec<CategoryWithRule>) -> Ca
     match applicable_rules.len() {
         1 => applicable_rules.get(0).unwrap().apply(booking),
         0 => CategorizedBooking {
-            category: "Uncategorized".into(),
+            category: "Andere Ausgaben".into(),
             booking,
         },
         _ => CategorizedBooking {
