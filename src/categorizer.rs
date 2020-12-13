@@ -7,7 +7,7 @@ pub fn categorize_booking(booking: Booking, rules: &Vec<CategoryWithRule>) -> Ca
         }
     }
     CategorizedBooking {
-        booking: booking,
+        booking,
         category: "Uncategorized".into(),
     }
 }

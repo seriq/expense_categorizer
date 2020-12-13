@@ -1,7 +1,6 @@
 use crate::model::*;
 use csv::ReaderBuilder;
 use std::collections::HashMap;
-use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
 
@@ -14,21 +13,18 @@ pub fn parse_bookings_from_file() -> csv::Result<Vec<Booking>> {
     rdr.deserialize().collect()
 }
 
-pub fn parse_rules_from_file() -> Result<Vec<CategoryWithRule>, Box<dyn Error>> {
+pub fn parse_rules_from_file() -> Vec<CategoryWithRule> {
     let parsed_rules = parse_booking_rules_from_file();
-    let mut result = Vec::new();
-
-    for (category, rule) in parsed_rules? {
-        result.push(CategoryWithRule {
-            category: category,
-            booking_rule: rule,
+    parsed_rules
+        .into_iter()
+        .map(|(category, booking_rule)| CategoryWithRule {
+            category,
+            booking_rule,
         })
-    }
-    Ok(result)
+        .collect()
 }
 
-fn parse_booking_rules_from_file() -> Result<HashMap<String, BookingRule>, serde_yaml::Error> {
+fn parse_booking_rules_from_file() -> HashMap<String, BookingRule> {
     let file = File::open(RULES_FILENAME).expect("Error while opening file.");
-    let buf_reader = BufReader::new(file);
-    serde_yaml::from_reader(buf_reader)
+    serde_yaml::from_reader(BufReader::new(file)).expect("Error while parsing rules from file.")
 }
