@@ -82,5 +82,5 @@ impl CategoryWithRule {
 #[derive(Debug, Serialize)]
 pub struct CategoryWithValue {
     pub category: String,
-    pub value: f32,
+    pub value: Option<f32>,
 }

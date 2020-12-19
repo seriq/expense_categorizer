@@ -1,9 +1,8 @@
+use crate::model::*;
 use std::collections::HashMap;
 
 use currency::Currency;
 use itertools::Itertools;
-
-use crate::model::*;
 
 pub fn categorize_bookings(
     bookings: Vec<Booking>,
@@ -13,7 +12,7 @@ pub fn categorize_bookings(
         .into_iter()
         .map(|booking| categorize_booking(booking, &rules))
         .sorted_by_key(|booking| booking.category.to_owned())
-        .collect_vec()
+        .collect()
 }
 
 fn categorize_booking(booking: Booking, rules: &Vec<CategoryWithRule>) -> CategorizedBooking {
@@ -28,10 +27,16 @@ fn categorize_booking(booking: Booking, rules: &Vec<CategoryWithRule>) -> Catego
             category: "Andere Ausgaben".into(),
             booking,
         },
-        _ => CategorizedBooking {
-            category: "Multiple Matches".into(),
-            booking,
-        },
+        _ => {
+            println!(
+                "Warning! The booking {:?} matches multiple categories!",
+                booking
+            );
+            CategorizedBooking {
+                category: "Multiple Matches".into(),
+                booking,
+            }
+        }
     }
 }
 pub fn collect_categories_to_values(

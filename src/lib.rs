@@ -1,8 +1,10 @@
-use crate::categorizer::categorize_bookings;
-use crate::parser::{parse_bookings_from_file, parse_rules_from_file, write_output_to_file};
-use categorizer::{collect_categories_to_values, group_bookings_by_categories};
+use categorizer::{
+    categorize_bookings, collect_categories_to_values, group_bookings_by_categories,
+};
 use currency::Currency;
-use parser::write_left_over_bookings_to_file;
+use parser::{
+    handle_skipped_bookings, parse_bookings_from_file, parse_rules_from_file, write_output_to_file,
+};
 use std::{collections::HashMap, error::Error};
 
 mod categorizer;
@@ -19,6 +21,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         collect_categories_to_values(&categories_to_bookings);
 
     write_output_to_file(rules, categories_to_values);
-    write_left_over_bookings_to_file(&categories_to_bookings["Andere Ausgaben"]);
+    handle_skipped_bookings(&categories_to_bookings);
     Ok(())
 }

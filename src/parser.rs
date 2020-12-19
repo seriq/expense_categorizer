@@ -47,7 +47,17 @@ pub fn write_output_to_file(
     writer.flush().expect("Error flushing writer.");
 }
 
-pub fn write_left_over_bookings_to_file(categorized_bookings: &Vec<CategorizedBooking>) {
+pub fn handle_skipped_bookings(categories_to_bookings: &HashMap<String, Vec<CategorizedBooking>>) {
+    let trash_bookings = categories_to_bookings
+        .get("Trash")
+        .expect("No Trash bookings. Possibly something went wrong.");
+    for categorized_booking in trash_bookings {
+        println!("Dropping booking {:?}", categorized_booking.booking);
+    }
+    write_left_over_bookings_to_file(&categories_to_bookings["Andere Ausgaben"]);
+}
+
+fn write_left_over_bookings_to_file(categorized_bookings: &Vec<CategorizedBooking>) {
     let file = File::create(LEFT_OVERS_FILENAME).expect("Error creating LeftOvers file.");
     let mut writer = WriterBuilder::new().delimiter(b';').from_writer(file);
 
@@ -73,13 +83,12 @@ fn prepare_data_for_output(
         .iter()
         .map(|rule| CategoryWithValue {
             category: rule.category.to_owned(),
-            value: categories_to_values
-                .get(&rule.category)
-                .unwrap_or(&Currency::from_str("€0").unwrap())
-                .value()
-                .to_f32()
-                .unwrap()
-                / 100.,
+            value: {
+                match categories_to_values.get(&rule.category) {
+                    Some(value) => Some(value.value().to_f32().unwrap().abs() / 100.),
+                    None => None,
+                }
+            },
         })
         .sorted_by_key(|category_with_value| category_with_value.category.to_owned())
         .collect()
