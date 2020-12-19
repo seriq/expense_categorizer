@@ -83,12 +83,9 @@ fn prepare_data_for_output(
         .iter()
         .map(|rule| CategoryWithValue {
             category: rule.category.to_owned(),
-            value: {
-                match categories_to_values.get(&rule.category) {
-                    Some(value) => Some(value.value().to_f32().unwrap().abs() / 100.),
-                    None => None,
-                }
-            },
+            value: categories_to_values
+                .get(&rule.category)
+                .and_then(|currency| currency.value().to_f32().map(|value| value.abs() / 100.)),
         })
         .sorted_by_key(|category_with_value| category_with_value.category.to_owned())
         .collect()
