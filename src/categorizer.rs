@@ -45,7 +45,13 @@ pub fn collect_categories_to_values(
                 bookings
                     .iter()
                     .map(|categorized_booking| {
-                        categorized_booking.booking.betrag.to_owned().unwrap()
+                        match categorized_booking.booking.betrag.to_owned() {
+                            Some(betrag) => betrag,
+                            None => panic!(
+                                "The booking {:?} has no betrag specified.",
+                                categorized_booking.booking
+                            ),
+                        }
                     })
                     .map(|betrag| {
                         Currency::from_str(&("€".to_owned() + &betrag)).expect("parse error")
