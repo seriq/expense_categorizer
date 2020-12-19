@@ -35,17 +35,15 @@ fn categorize_booking(booking: Booking, rules: &Vec<CategoryWithRule>) -> Catego
     }
 }
 pub fn collect_categories_to_values(
-    categorized_bookings: Vec<CategorizedBooking>,
+    categories_to_values: &HashMap<String, Vec<CategorizedBooking>>,
 ) -> HashMap<String, Currency> {
-    categorized_bookings
+    categories_to_values
         .iter()
-        .group_by(|booking| booking.category.to_owned())
-        .into_iter()
-        .map(|(category, group)| {
+        .map(|(category, bookings)| {
             (
-                category,
-                group
-                    .into_iter()
+                category.to_owned(),
+                bookings
+                    .iter()
                     .map(|categorized_booking| {
                         categorized_booking.booking.betrag.to_owned().unwrap()
                     })
@@ -56,4 +54,13 @@ pub fn collect_categories_to_values(
             )
         })
         .collect()
+}
+
+pub fn group_bookings_by_categories(
+    categorized_bookings: Vec<CategorizedBooking>,
+) -> HashMap<String, Vec<CategorizedBooking>> {
+    categorized_bookings
+        .into_iter()
+        .map(|categorized_booking| (categorized_booking.category.to_owned(), categorized_booking))
+        .into_group_map()
 }

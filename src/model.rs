@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Default, Deserialize)]
+#[derive(Debug, PartialEq, Default, Deserialize, Serialize)]
 pub struct Booking {
     #[serde(rename = "Buchungsdatum")]
     pub buchungsdatum: Option<String>,

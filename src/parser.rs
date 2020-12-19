@@ -8,6 +8,7 @@ use std::{collections::HashMap, fs::File, io::BufReader};
 const BOOKINGS_FILENAME: &str = "data/Buchungsliste.csv";
 const RULES_FILENAME: &str = "data/Rules.yaml";
 const OUTPUT_FILENAME: &str = "data/Output.csv";
+const LEFT_OVERS_FILENAME: &str = "data/LeftOvers.csv";
 
 pub fn parse_bookings_from_file() -> Vec<Booking> {
     let file = File::open(BOOKINGS_FILENAME)
@@ -41,6 +42,18 @@ pub fn write_output_to_file(
     for record in &categories_with_values {
         writer
             .serialize(record)
+            .expect(&format!("Error writing record {:?}", record));
+    }
+    writer.flush().expect("Error flushing writer.");
+}
+
+pub fn write_left_over_bookings_to_file(categorized_bookings: &Vec<CategorizedBooking>) {
+    let file = File::create(LEFT_OVERS_FILENAME).expect("Error creating LeftOvers file.");
+    let mut writer = WriterBuilder::new().delimiter(b';').from_writer(file);
+
+    for record in categorized_bookings {
+        writer
+            .serialize(&record.booking)
             .expect(&format!("Error writing record {:?}", record));
     }
     writer.flush().expect("Error flushing writer.");
