@@ -32,8 +32,8 @@ pub fn parse_rules_from_file() -> Vec<CategoryWithRule> {
 }
 
 pub fn write_output_to_file(
-    rules: Vec<CategoryWithRule>,
-    categories_to_values: HashMap<String, Currency>,
+    rules: &Vec<CategoryWithRule>,
+    categories_to_values: &HashMap<String, Currency>,
 ) {
     let file = File::create(OUTPUT_FILENAME).expect("Error creating Output file.");
     let mut writer = WriterBuilder::new().delimiter(b';').from_writer(file);
@@ -76,8 +76,8 @@ fn parse_booking_rules_from_file() -> HashMap<String, BookingRule> {
 }
 
 fn prepare_data_for_output(
-    rules: Vec<CategoryWithRule>,
-    categories_to_values: HashMap<String, Currency>,
+    rules: &Vec<CategoryWithRule>,
+    categories_to_values: &HashMap<String, Currency>,
 ) -> Vec<CategoryWithValue> {
     rules
         .iter()
