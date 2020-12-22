@@ -24,7 +24,7 @@ pub struct Booking {
     pub schlagworte: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Default, Debug, Deserialize)]
 pub struct BookingRule {
     pub buchungsdatum: Option<Vec<String>>,
     pub empfaenger: Option<Vec<String>>,
@@ -43,6 +43,7 @@ impl BookingRule {
         BookingRule::any_present(&self.buchungstext, &booking.buchungstext)
             && BookingRule::any_present(&self.empfaenger, &booking.empfaenger)
             && BookingRule::any_present(&self.verwendungszweck, &booking.verwendungszweck)
+            && BookingRule::any_present(&self.betrag, &booking.betrag)
     }
 
     fn any_present(needles: &Option<Vec<String>>, haystack: &Option<String>) -> bool {
