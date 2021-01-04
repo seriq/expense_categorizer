@@ -85,7 +85,7 @@ fn prepare_data_for_output(
             category: rule.category.to_owned(),
             value: categories_to_values
                 .get(&rule.category)
-                .and_then(|currency| currency.value().to_f32().map(|value| value.abs() / 100.)),
+                .and_then(|currency| currency.value().to_f32().map(|value| -value / 100.)),
         })
         .sorted_by_key(|category_with_value| category_with_value.category.to_owned())
         .collect()

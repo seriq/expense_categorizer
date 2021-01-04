@@ -44,6 +44,7 @@ impl BookingRule {
             && BookingRule::any_present(&self.empfaenger, &booking.empfaenger)
             && BookingRule::any_present(&self.verwendungszweck, &booking.verwendungszweck)
             && BookingRule::any_present(&self.betrag, &booking.betrag)
+            && BookingRule::any_present(&self.iban, &booking.iban)
     }
 
     fn any_present(needles: &Option<Vec<String>>, haystack: &Option<String>) -> bool {
