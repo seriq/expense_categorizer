@@ -13,7 +13,10 @@ const LEFT_OVERS_FILENAME: &str = "data/LeftOvers.csv";
 pub fn parse_bookings_from_file() -> Vec<Booking> {
     let file = File::open(BOOKINGS_FILENAME)
         .expect(&format!("Error while opening file {}", BOOKINGS_FILENAME));
-    let mut reader = ReaderBuilder::new().delimiter(b';').from_reader(file);
+    let mut reader = ReaderBuilder::new()
+        .delimiter(b';')
+        .flexible(true)
+        .from_reader(file);
     reader
         .deserialize()
         .collect::<csv::Result<Vec<Booking>>>()
